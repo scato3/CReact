@@ -1,6 +1,6 @@
 # 가상 DOM 구현 프로젝트
 
-이 프로젝트는 React와 유사한 방식으로 작동하는 간단한 가상 DOM(Virtual DOM) 구현한 예제입니다. 이 라이브러리는 `createElement`, `useState`, `useEffect`와 같은 핵심 React API를 모방하여 구현되어 있습니다.
+이 프로젝트는 React와 유사한 방식으로 작동하는 간단한 가상 DOM(Virtual DOM) 구현한 예제입니다. 이 예제는 `createElement`, `useState`, `useEffect`와 같은 핵심 React API를 모방하여 구현되어 있습니다.
 
 ## 주요 기능
 
@@ -49,7 +49,7 @@ useEffect(callback, dependencies);
 
 ## 할 일 목록 예제
 
-이 프로젝트는 가상 DOM 라이브러리를 활용한 할 일 목록(TodoList) 애플리케이션을 포함하고 있습니다:
+이 프로젝트는 가상 DOM을 활용한 할 일 목록(TodoList) 애플리케이션을 포함하고 있습니다:
 
 - 할 일 추가
 - 할 일 삭제
