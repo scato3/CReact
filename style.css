@@ -1,0 +1,142 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f4f7f9;
+  display: flex;
+  justify-content: center;
+  padding-top: 50px;
+}
+
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 앱 컨테이너 */
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 0 20px;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-size: 28px;
+}
+
+/* 카운터 컴포넌트 */
+.counter-container {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+  text-align: center;
+}
+
+.counter-container h2 {
+  color: #3498db;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+.counter-container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* 버튼 스타일 */
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+  transform: translateY(0);
+}
+
+.button-increment {
+  background-color: #2ecc71;
+}
+
+.button-increment:hover {
+  background-color: #27ae60;
+}
+
+.button-decrement {
+  background-color: #e74c3c;
+}
+
+.button-decrement:hover {
+  background-color: #c0392b;
+}
+
+/* 할 일 목록 스타일 */
+.todo-list-container {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.todo-list-container h2 {
+  color: #3498db;
+  margin-bottom: 15px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.todo-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.2s;
+}
+
+.todo-item:hover {
+  background-color: #f1f1f1;
+}
+
+.todo-item.completed {
+  opacity: 0.7;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.add-button:hover {
+  background-color: #2980b9;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
