@@ -106,7 +106,7 @@ export function TodoList() {
       createElement(
         "div",
         {
-          onClick: () => handleAdd("dummyValue"),
+          onClick: handleAdd,
           className: "add-button",
           style: {
             backgroundColor: "#3498db",

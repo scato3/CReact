@@ -37,15 +37,44 @@ export function getApp() {
   return App;
 }
 
-// 전체 앱 다시 렌더링
+// 컴포넌트 구조 기반 안정적인 ID 생성 시스템
+let componentCounter = new Map();
+
+function getStableId(vNode, parentPath = "") {
+  // 타입 확인 (함수형 컴포넌트 또는 HTML 태그)
+  const type = typeof vNode.type === "function" ? vNode.type.name : vNode.type;
+
+  // 키 확인 (사용자 정의 키 또는 인덱스 기반 키)
+  const key = vNode.props?.key;
+
+  // 타입별 카운터 관리
+  if (!componentCounter.has(type)) {
+    componentCounter.set(type, 0);
+  }
+
+  // 안정적인 식별자 생성
+  let id;
+  if (key !== undefined) {
+    // 키가 있으면 키 사용
+    id = `${type}-${key}`;
+  } else {
+    // 키가 없으면 타입과 카운터 조합
+    const count = componentCounter.get(type);
+    id = `${type}-${count}`;
+    componentCounter.set(type, count + 1);
+  }
+
+  // 경로 생성 (부모 경로 + 현재 ID)
+  return parentPath ? `${parentPath}/${id}` : id;
+}
+
+// rerender 함수를 원래 단순한 방식으로 복원
 function rerender() {
-  // 이미 렌더링 중이면 큐에 추가하고 나중에 다시 시도
   if (isRendering) {
     updateQueued = true;
     return;
   }
 
-  // 큐에 업데이트가 없으면 종료
   if (!updateQueued) {
     return;
   }
@@ -60,9 +89,8 @@ function rerender() {
   }
 
   try {
-    // 기존 내용 지우기
+    // 단순하게 전체 DOM 다시 렌더링
     rootElement.innerHTML = "";
-    // 앱 다시 렌더링
     render(createElement(App, {}), rootElement);
   } catch (error) {
     console.error("렌더링 오류:", error);
@@ -70,7 +98,6 @@ function rerender() {
 
   isRendering = false;
 
-  // 대기 중인 업데이트가 있으면 다시 렌더링
   if (updateQueued) {
     rerender();
   }
@@ -87,7 +114,7 @@ function queueUpdate() {
 }
 
 // 컴포넌트 렌더링 함수
-export function render(vNode, container) {
+export function render(vNode, container, parentPath = "") {
   if (!vNode) return;
 
   // 텍스트 노드 처리
@@ -113,16 +140,17 @@ export function render(vNode, container) {
     stateIndex = prevStateIndex;
     currentComponent = prevComponent;
 
-    // 자식 노드 렌더링
-    return render(childNode, container);
+    // 자식 노드 렌더링 (현재 경로 전달)
+    const componentPath = getStableId(vNode, parentPath);
+    return render(childNode, container, componentPath);
   }
 
   // HTML 요소 생성
   const element = document.createElement(vNode.type);
 
-  // 고유 ID 생성 (이벤트 캐싱용)
-  const elementId = Math.random().toString(36).substring(2, 9);
-  element.dataset.vdomId = elementId;
+  // 안정적인 ID 설정
+  const stableId = getStableId(vNode, parentPath);
+  element.dataset.vdomId = stableId;
 
   // 속성 설정
   if (vNode.props) {
@@ -130,7 +158,7 @@ export function render(vNode, container) {
       // 이벤트 핸들러 처리
       if (name.startsWith("on") && typeof value === "function") {
         const eventName = name.slice(2).toLowerCase();
-        const handlerKey = `${elementId}:${eventName}`;
+        const handlerKey = `${stableId}:${eventName}`;
 
         // 기존 핸들러가 있으면 제거
         if (eventHandlerCache.has(handlerKey)) {
@@ -168,21 +196,21 @@ export function render(vNode, container) {
       ) {
         element.value = value;
       }
-      // checked 속성 처리
+      // checked 속성인 경우
       else if (name === "checked" && element.tagName === "INPUT") {
         element.checked = value;
       }
-      // 일반 속성 처리
+      // 일반 속성인 경우
       else if (name !== "children" && name !== "key") {
         element.setAttribute(name, value);
       }
     });
   }
 
-  // 자식 노드 렌더링
+  // 자식 노드 렌더링 (현재 경로 전달)
   if (vNode.children) {
-    vNode.children.forEach((child) => {
-      render(child, element);
+    vNode.children.forEach((child, index) => {
+      render(child, element, stableId);
     });
   }
 
@@ -239,7 +267,7 @@ export function useState(initialValue) {
   return [state, setState];
 }
 
-// 앱 초기화 함수
+// initApp 함수도 원래대로 사용
 export function initApp() {
   const rootElement = document.getElementById("root");
   if (!rootElement || !App) return;
